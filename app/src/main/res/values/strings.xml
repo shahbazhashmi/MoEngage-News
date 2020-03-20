@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="error_internet">Error in Internet Connection</string>
 </resources>
