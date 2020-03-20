@@ -1,8 +1,10 @@
-package org.moengage.news;
+package org.moengage.news.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import org.moengage.news.R;
 
 public class MainActivity extends AppCompatActivity {
 
