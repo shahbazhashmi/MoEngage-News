@@ -1,5 +1,8 @@
 package org.moengage.news.utils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -140,6 +143,37 @@ public class HttpUtility {
 
         return response.toArray(new String[0]);
     }
+
+
+    /**
+     * Returns JSON from the server's response. This method should
+     * be used if the server returns JSON string.
+     *
+     * @return an JSON of the server's response
+     * @throws IOException thrown if any I/O error occurred
+     */
+    public static JSONObject getJsonResponse() throws IOException, JSONException {
+        InputStream inputStream = null;
+        if (httpConn != null) {
+            inputStream = httpConn.getInputStream();
+        } else {
+            throw new IOException("Connection is not established.");
+        }
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                inputStream));
+        StringBuilder sb = new StringBuilder();
+
+        String line = "";
+        while ((line = reader.readLine()) != null) {
+            sb.append(line + "\n");
+        }
+        reader.close();
+
+        return new JSONObject(sb.toString());
+    }
+
+
 
     /**
      * Closes the connection if opened
