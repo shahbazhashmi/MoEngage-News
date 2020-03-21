@@ -52,8 +52,6 @@ public class ArticleRepository {
 
         if (isLocalDataAvailable && !mustFetchNewData) {
             getArticlesFromDb();
-            if (fetchListDataListener != null)
-                fetchListDataListener.onSuccess(mArticleList);
         }
 
         if (!AppUtils.isNetworkAvailable()) {
@@ -141,14 +139,14 @@ public class ArticleRepository {
     }
 
 
-    public boolean isLocalDataAvailable() {
+    private boolean isLocalDataAvailable() {
         db = AppController.getArticleDbHelper().getReadableDatabase();
         long count = DatabaseUtils.queryNumEntries(db, TABLE_NAME);
         db.close();
         return count > 0;
     }
 
-    public void getArticlesFromDb() {
+    private void getArticlesFromDb() {
 
         DefaultExecutorSupplier.getInstance().forBackgroundTasks().execute(() -> {
 
@@ -183,6 +181,11 @@ public class ArticleRepository {
                 mArticleList.add(article);
             }
             c.close();
+
+            if (fetchListDataListener != null)
+                DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(() -> {
+                    fetchListDataListener.onSuccess(mArticleList);
+                });
 
         });
     }

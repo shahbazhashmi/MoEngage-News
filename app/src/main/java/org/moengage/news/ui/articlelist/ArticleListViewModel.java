@@ -21,8 +21,11 @@ public class ArticleListViewModel extends AndroidViewModel implements FetchListD
 
     ArticleRepository articleRepository;
 
+    public ArticleAdapter articleAdapter;
+
     public ArticleListViewModel(@NonNull Application application) {
         super(application);
+        articleAdapter = new ArticleAdapter();
         articleRepository = new ArticleRepository();
         articleRepository.setFetchListDataListener(this);
         articleRepository.getArticles(false);
@@ -36,11 +39,13 @@ public class ArticleListViewModel extends AndroidViewModel implements FetchListD
     @Override
     public void onSuccess(List<Article> articleList) {
         Log.d(TAG, "FetchListDataListener : onSuccess");
+        articleAdapter.setData(articleList);
     }
 
     @Override
     public void onUpdatedData(List<Article> articleList) {
         Log.d(TAG, "FetchListDataListener : onUpdatedData");
+        articleAdapter.setData(articleList);
     }
 
     @Override
