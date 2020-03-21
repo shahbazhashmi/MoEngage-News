@@ -2,90 +2,100 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/row_parent_lt"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/app_white">
+    android:background="@android:color/white"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/spacing_20" />
+        app:layout_constraintGuide_begin="@dimen/spacing_16" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_end="@dimen/spacing_20" />
+        app:layout_constraintGuide_end="@dimen/spacing_16" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="@dimen/spacing_20" />
+        app:layout_constraintGuide_begin="@dimen/spacing_16" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="@dimen/spacing_20" />
+        app:layout_constraintGuide_end="@dimen/spacing_16" />
 
 
-   <!-- <TextView
+    <TextView
         android:id="@+id/textview_username"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/spacing_20"
         android:singleLine="true"
+        android:textColor="@color/secondaryPrimaryText"
         android:textSize="@dimen/font_14"
         android:textStyle="normal"
-        app:layout_constraintLeft_toRightOf="@id/imageview_profile"
-        app:layout_constraintRight_toRightOf="@id/guideline_right"
-        app:layout_constraintTop_toTopOf="@id/imageview_profile" />
+        app:layout_constraintLeft_toLeftOf="@id/guideline_left"
+        app:layout_constraintRight_toLeftOf="@id/textview_datetime"
+        app:layout_constraintTop_toTopOf="@id/guideline_top" />
+
 
     <TextView
-        android:id="@+id/textview_reponame"
+        android:id="@+id/textview_datetime"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="right"
         android:singleLine="true"
-        android:textColor="@color/app_black"
-        android:textSize="@dimen/font_18"
-        app:layout_constraintBottom_toBottomOf="@+id/imageview_profile"
+        android:textColor="@color/secondaryPrimaryText"
+        android:textSize="@dimen/font_12"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@+id/textview_username"
+        app:layout_constraintRight_toRightOf="@id/guideline_right"
+        app:layout_constraintTop_toTopOf="@id/guideline_top" />
+
+
+    <TextView
+        android:id="@+id/textview_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_6"
+        android:lineSpacingExtra="@dimen/spacing_2"
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="@dimen/font_14"
+        android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="@id/textview_username"
-        app:layout_constraintRight_toRightOf="@id/guideline_right" />
+        app:layout_constraintRight_toRightOf="@id/guideline_right"
+        app:layout_constraintTop_toBottomOf="@+id/textview_username" />
 
     <TextView
         android:id="@+id/textview_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_4"
-        android:textColor="@color/app_black"
+        android:layout_marginTop="@dimen/spacing_6"
         android:lineSpacingExtra="@dimen/spacing_2"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="@dimen/font_14"
-        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline_bottom"
         app:layout_constraintLeft_toLeftOf="@id/textview_username"
         app:layout_constraintRight_toRightOf="@id/guideline_right"
-        app:layout_constraintTop_toBottomOf="@+id/textview_reponame" />
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/spacing_20"
-        app:layout_constraintBottom_toTopOf="@+id/divider"
-        app:layout_constraintTop_toBottomOf="@+id/textview_reponame" />-->
+        app:layout_constraintTop_toBottomOf="@+id/textview_title" />
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="0.7dp"
-        android:background="@color/app_grey"
+        android:background="@color/colorDivider"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

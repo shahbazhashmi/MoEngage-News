@@ -3,12 +3,14 @@ package org.moengage.news.ui.articlelist;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.moengage.news.R;
 import org.moengage.news.models.Article;
+import org.moengage.news.utils.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +28,21 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleH
 
     class ArticleHolder extends RecyclerView.ViewHolder {
 
+        TextView userNameTv = itemView.findViewById(R.id.textview_username);
+        TextView dateTimeTv = itemView.findViewById(R.id.textview_datetime);
+        TextView titleTv = itemView.findViewById(R.id.textview_title);
+        TextView descTv = itemView.findViewById(R.id.textview_description);
+
         public ArticleHolder(@NonNull View itemView) {
             super(itemView);
         }
 
         public void bind(int position) {
-
+            Article article = articleArrayList.get(position);
+            userNameTv.setText(article.getAuthor());
+            dateTimeTv.setText(DateTimeUtils.getFormattedDateTime(article.getPublishedAt()));
+            titleTv.setText(article.getTitle());
+            descTv.setText(article.getDescription());
         }
     }
 
