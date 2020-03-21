@@ -14,6 +14,7 @@ import org.moengage.news.R;
 import org.moengage.news.data.db.ArticleContract;
 import org.moengage.news.interfaces.FetchListDataListener;
 import org.moengage.news.models.Article;
+import org.moengage.news.models.FilterModel;
 import org.moengage.news.models.Source;
 import org.moengage.news.utils.AppUtils;
 import org.moengage.news.utils.HttpUtility;
@@ -37,13 +38,17 @@ public class ArticleRepository {
 
     FetchListDataListener fetchListDataListener;
 
+    FilterModel filterModel;
+
     private List<Article> mArticleList;
 
     public void setFetchListDataListener(FetchListDataListener fetchListDataListener) {
         this.fetchListDataListener = fetchListDataListener;
     }
 
-    public void getArticles(boolean mustFetchNewData) {
+    public void getArticles(FilterModel filterModel, boolean mustFetchNewData) {
+
+        this.filterModel = filterModel;
 
         if (fetchListDataListener != null)
             fetchListDataListener.onLoading();
@@ -70,11 +75,11 @@ public class ArticleRepository {
         }
 
         if (!isLocalDataAvailable || mustFetchNewData)
-            fetchAndSaveArticles();
+            fetchAndSaveArticles(true);
     }
 
 
-    public void fetchAndSaveArticles() {
+    public void fetchAndSaveArticles(boolean returnData) {
 
         DefaultExecutorSupplier.getInstance().forBackgroundTasks().execute(() -> {
 
@@ -87,12 +92,15 @@ public class ArticleRepository {
 
                 Log.d(TAG, "fetchAndGetListData -> API response - " + response.toString());
 
-                mArticleList = new ArrayList<>();
                 JSONArray articles = response.getJSONArray("articles");
 
                 db = AppController.getArticleDbHelper().getWritableDatabase();
 
                 db.delete(TABLE_NAME, null, null);
+
+                if (articles.length() == 0) {
+                    throw new Exception("data not found");
+                }
 
                 for (int i = 0; i < articles.length(); i++) {
 
@@ -108,11 +116,6 @@ public class ArticleRepository {
                     String sourceId = sourceJson.optString("id");
                     String sourceName = sourceJson.optString("name");
 
-                    Source source = new Source(sourceId, sourceName);
-                    Article article = new Article(author, title, description, url, urlToImage, publishedAt, content, source);
-
-                    mArticleList.add(article);
-
                     // Create a new map of values, where column names are the keys
                     ContentValues values = new ContentValues();
                     values.put(ArticleContract.ArticleEntry.COLUMN_NAME_AUTHOR, author);
@@ -125,18 +128,24 @@ public class ArticleRepository {
                     values.put(ArticleContract.ArticleEntry.COLUMN_NAME_SOURCE_ID, sourceId);
                     values.put(ArticleContract.ArticleEntry.COLUMN_NAME_SOURCE_NAME, sourceName);
 
-                    //  Insert the new row, returning the primary key value of the new row
                     long newRowId = db.insert(TABLE_NAME, null, values);
                 }
 
                 SharedPreferenceManager.getInstance().setLastUpdatedTimestamp();
+                if (returnData) {
+                    getArticlesFromDb();
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
+                if (fetchListDataListener != null)
+                    DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(() -> {
+                        fetchListDataListener.onError(AppController.getResourses().getString(R.string.error_something_went_wrong), true);
+                    });
             }
             if (fetchListDataListener != null)
                 DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(() -> {
-                    fetchListDataListener.onUpdatedData(mArticleList);
+                    fetchListDataListener.onSuccess(mArticleList);
                 });
 
         });
@@ -150,11 +159,33 @@ public class ArticleRepository {
         return count > 0;
     }
 
+    public ArrayList<String> getAllPublishers() {
+        ArrayList<String> authorList = new ArrayList<>();
+        db = AppController.getArticleDbHelper().getReadableDatabase();
+        Cursor c = db.query(true, ArticleContract.ArticleEntry.TABLE_NAME, new String[]{ArticleContract.ArticleEntry.COLUMN_NAME_AUTHOR}, null, null, ArticleContract.ArticleEntry.COLUMN_NAME_AUTHOR, null, null, null);
+        while (c.moveToNext()) {
+            String author = c.getString(c.getColumnIndexOrThrow(ArticleContract.ArticleEntry.COLUMN_NAME_AUTHOR));
+            authorList.add(author);
+        }
+        c.close();
+        return authorList;
+    }
+
     private void getArticlesFromDb() {
 
         DefaultExecutorSupplier.getInstance().forBackgroundTasks().execute(() -> {
 
             db = AppController.getArticleDbHelper().getReadableDatabase();
+
+            String sortOrder = null;
+
+            if (filterModel != null) {
+                if (filterModel.isSortByDateAsc()) {
+                    sortOrder = ArticleContract.ArticleEntry.COLUMN_NAME_AUTHOR + " ASC";
+                } else {
+                    sortOrder = ArticleContract.ArticleEntry.COLUMN_NAME_AUTHOR + " DESC";
+                }
+            }
 
             Cursor c = db.query(
                     ArticleContract.ArticleEntry.TABLE_NAME,   // The table to query
@@ -163,7 +194,7 @@ public class ArticleRepository {
                     null,          // The values for the WHERE clause
                     null,                   // don't group the rows
                     null,                   // don't filter by row groups
-                    null               // The sort order
+                    sortOrder               // The sort order
             );
 
             mArticleList = new ArrayList<>();

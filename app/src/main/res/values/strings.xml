@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">MoEngage News</string>
     <string name="error_internet">Error in Internet Connection</string>
+    <string name="error_something_went_wrong">Something went wrong</string>
     <string name="txt_retry">RETRY</string>
 </resources>

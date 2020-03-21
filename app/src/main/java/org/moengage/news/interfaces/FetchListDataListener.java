@@ -13,8 +13,6 @@ public interface FetchListDataListener {
 
     void onSuccess(List<Article> articleList);
 
-    void onUpdatedData(List<Article> articleList);
-
     void onError(String errMsg, boolean canRetry);
 
     void onErrorPrompt(String errMsg);

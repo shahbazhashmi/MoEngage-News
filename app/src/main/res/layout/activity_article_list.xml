@@ -16,13 +16,34 @@
         android:layout_height="match_parent"
         tools:context=".ui.articlelist.ArticleListActivity">
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_article"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/filter_sort_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:recyclerViewAdapter="@{vm.articleAdapter}" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/filter_sort_layout"
+            android:background="@color/colorPrimaryLight"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:padding="@dimen/spacing_16"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <ImageView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:onClick="@{() -> vm.toggleSort()}"
+            android:src="@{vm.ascendingSort ? @drawable/ic_sort_ascending : @drawable/ic_sort_descending}"
+            android:layout_width="@dimen/sort_icon_dimension"
+            android:layout_height="@dimen/sort_icon_dimension"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
             layout="@layout/layout_loader"

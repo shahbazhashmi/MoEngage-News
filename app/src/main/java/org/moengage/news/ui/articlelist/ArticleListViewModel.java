@@ -4,11 +4,13 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.ObservableField;
 import androidx.lifecycle.AndroidViewModel;
 
 import org.moengage.news.data.ArticleRepository;
 import org.moengage.news.interfaces.FetchListDataListener;
 import org.moengage.news.models.Article;
+import org.moengage.news.models.FilterModel;
 import org.moengage.news.ui.loader.LoaderHelper;
 
 import java.util.List;
@@ -26,13 +28,18 @@ public class ArticleListViewModel extends AndroidViewModel implements FetchListD
 
     public LoaderHelper loaderHelper;
 
+    public ObservableField<Boolean> ascendingSort = new ObservableField<>();
+
+    FilterModel filterModel;
+
     public ArticleListViewModel(@NonNull Application application) {
         super(application);
-        loaderHelper = new LoaderHelper(() -> articleRepository.getArticles(false));
+        filterModel = new FilterModel();
+        loaderHelper = new LoaderHelper(() -> articleRepository.getArticles(filterModel, false));
         articleAdapter = new ArticleAdapter();
         articleRepository = new ArticleRepository();
         articleRepository.setFetchListDataListener(this);
-        articleRepository.getArticles(false);
+        articleRepository.getArticles(filterModel, false);
     }
 
     @Override
@@ -44,15 +51,9 @@ public class ArticleListViewModel extends AndroidViewModel implements FetchListD
     @Override
     public void onSuccess(List<Article> articleList) {
         Log.d(TAG, "FetchListDataListener : onSuccess");
-        loaderHelper.dismiss();
         articleAdapter.setData(articleList);
-    }
-
-    @Override
-    public void onUpdatedData(List<Article> articleList) {
-        Log.d(TAG, "FetchListDataListener : onUpdatedData");
+        populateSortAndFilter();
         loaderHelper.dismiss();
-        articleAdapter.setData(articleList);
     }
 
     @Override
@@ -69,5 +70,16 @@ public class ArticleListViewModel extends AndroidViewModel implements FetchListD
     public void onErrorPrompt(String errMsg) {
         Log.d(TAG, "FetchListDataListener : onErrorPrompt");
         loaderHelper.dismiss();
+    }
+
+    public void toggleSort() {
+        ascendingSort.set(!ascendingSort.get());
+        filterModel.setSortByDateAsc(ascendingSort.get());
+        articleRepository.getArticles(filterModel, false);
+    }
+
+    void populateSortAndFilter() {
+        ascendingSort.set(filterModel.isSortByDateAsc());
+        articleRepository.getAllPublishers();
     }
 }
