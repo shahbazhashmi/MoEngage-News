@@ -48,6 +48,10 @@ public class ArticleRepository {
         if (fetchListDataListener != null)
             fetchListDataListener.onLoading();
 
+        if (!mustFetchNewData) {
+            mustFetchNewData = SharedPreferenceManager.getInstance().isLocalDataExpired();
+        }
+
         boolean isLocalDataAvailable = isLocalDataAvailable();
 
         if (isLocalDataAvailable && !mustFetchNewData) {
@@ -65,7 +69,7 @@ public class ArticleRepository {
             return;
         }
 
-        if (!isLocalDataAvailable || mustFetchNewData || SharedPreferenceManager.getInstance().isLocalDataExpired())
+        if (!isLocalDataAvailable || mustFetchNewData)
             fetchAndSaveArticles();
     }
 
@@ -131,9 +135,9 @@ public class ArticleRepository {
                 e.printStackTrace();
             }
             if (fetchListDataListener != null)
-            DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(() -> {
-                fetchListDataListener.onUpdatedData(mArticleList);
-            });
+                DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(() -> {
+                    fetchListDataListener.onUpdatedData(mArticleList);
+                });
 
         });
     }
