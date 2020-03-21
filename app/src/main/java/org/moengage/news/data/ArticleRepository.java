@@ -17,6 +17,7 @@ import org.moengage.news.models.Article;
 import org.moengage.news.models.Source;
 import org.moengage.news.utils.AppUtils;
 import org.moengage.news.utils.HttpUtility;
+import org.moengage.news.utils.SharedPreferenceManager;
 import org.moengage.news.utils.executors.DefaultExecutorSupplier;
 
 import java.util.ArrayList;
@@ -37,28 +38,37 @@ public class ArticleRepository {
     FetchListDataListener fetchListDataListener;
 
     private List<Article> mArticleList;
-    private Article mArticle;
 
+    public void setFetchListDataListener(FetchListDataListener fetchListDataListener) {
+        this.fetchListDataListener = fetchListDataListener;
+    }
 
-    public void getArticles() {
+    public void getArticles(boolean mustFetchNewData) {
+
+        if (fetchListDataListener != null)
+            fetchListDataListener.onLoading();
 
         boolean isLocalDataAvailable = isLocalDataAvailable();
 
-        if (isLocalDataAvailable) {
+        if (isLocalDataAvailable && !mustFetchNewData) {
             getArticlesFromDb();
-            fetchListDataListener.onSuccess(mArticleList);
+            if (fetchListDataListener != null)
+                fetchListDataListener.onSuccess(mArticleList);
         }
 
-        if (!AppUtils.isNetworkAvailable(AppController.getInstance())) {
+        if (!AppUtils.isNetworkAvailable()) {
             if (isLocalDataAvailable) {
-                fetchListDataListener.onErrorPrompt(AppController.getResourses().getString(R.string.error_internet));
+                if (fetchListDataListener != null)
+                    fetchListDataListener.onErrorPrompt(AppController.getResourses().getString(R.string.error_internet));
             } else {
-                fetchListDataListener.onError(AppController.getResourses().getString(R.string.error_internet), true);
+                if (fetchListDataListener != null)
+                    fetchListDataListener.onError(AppController.getResourses().getString(R.string.error_internet), true);
             }
             return;
         }
 
-        fetchAndSaveArticles();
+        if (!isLocalDataAvailable || mustFetchNewData || SharedPreferenceManager.getInstance().isLocalDataExpired())
+            fetchAndSaveArticles();
     }
 
 
@@ -79,6 +89,8 @@ public class ArticleRepository {
                 JSONArray articles = response.getJSONArray("articles");
 
                 db = AppController.getArticleDbHelper().getWritableDatabase();
+
+                db.delete(TABLE_NAME, null, null);
 
                 for (int i = 0; i < articles.length(); i++) {
 
@@ -115,10 +127,12 @@ public class ArticleRepository {
                     long newRowId = db.insert(TABLE_NAME, null, values);
                 }
 
+                SharedPreferenceManager.getInstance().setLastUpdatedTimestamp();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
+            if (fetchListDataListener != null)
             DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(() -> {
                 fetchListDataListener.onUpdatedData(mArticleList);
             });

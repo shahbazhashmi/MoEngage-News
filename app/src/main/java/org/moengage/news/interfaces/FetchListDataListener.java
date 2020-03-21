@@ -9,6 +9,8 @@ import java.util.List;
  */
 public interface FetchListDataListener {
 
+    void onLoading();
+
     void onSuccess(List<Article> articleList);
 
     void onUpdatedData(List<Article> articleList);
