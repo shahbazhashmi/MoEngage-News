@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 import org.moengage.news.data.ArticleRepository;
 import org.moengage.news.interfaces.FetchListDataListener;
 import org.moengage.news.models.Article;
+import org.moengage.news.ui.loader.LoaderHelper;
 
 import java.util.List;
 
@@ -23,8 +24,11 @@ public class ArticleListViewModel extends AndroidViewModel implements FetchListD
 
     public ArticleAdapter articleAdapter;
 
+    public LoaderHelper loaderHelper;
+
     public ArticleListViewModel(@NonNull Application application) {
         super(application);
+        loaderHelper = new LoaderHelper(() -> articleRepository.getArticles(false));
         articleAdapter = new ArticleAdapter();
         articleRepository = new ArticleRepository();
         articleRepository.setFetchListDataListener(this);
@@ -33,28 +37,37 @@ public class ArticleListViewModel extends AndroidViewModel implements FetchListD
 
     @Override
     public void onLoading() {
+        loaderHelper.showLoading();
         Log.d(TAG, "FetchListDataListener : onLoading");
     }
 
     @Override
     public void onSuccess(List<Article> articleList) {
         Log.d(TAG, "FetchListDataListener : onSuccess");
+        loaderHelper.dismiss();
         articleAdapter.setData(articleList);
     }
 
     @Override
     public void onUpdatedData(List<Article> articleList) {
         Log.d(TAG, "FetchListDataListener : onUpdatedData");
+        loaderHelper.dismiss();
         articleAdapter.setData(articleList);
     }
 
     @Override
     public void onError(String errMsg, boolean canRetry) {
+        if (canRetry) {
+            loaderHelper.showErrorWithRetry(errMsg);
+        } else {
+            loaderHelper.showError(errMsg);
+        }
         Log.d(TAG, "FetchListDataListener : onError");
     }
 
     @Override
     public void onErrorPrompt(String errMsg) {
         Log.d(TAG, "FetchListDataListener : onErrorPrompt");
+        loaderHelper.dismiss();
     }
 }

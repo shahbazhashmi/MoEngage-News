@@ -54,7 +54,7 @@ public class ArticleRepository {
             getArticlesFromDb();
         }
 
-        if (!AppUtils.isNetworkAvailable()) {
+        if (!AppUtils.isNetworkAvailable(AppController.getInstance())) {
             if (isLocalDataAvailable) {
                 if (fetchListDataListener != null)
                     fetchListDataListener.onErrorPrompt(AppController.getResourses().getString(R.string.error_internet));

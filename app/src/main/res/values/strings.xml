@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="error_internet">Error in Internet Connection</string>
+    <string name="txt_retry">RETRY</string>
 </resources>

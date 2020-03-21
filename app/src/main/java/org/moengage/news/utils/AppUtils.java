@@ -2,6 +2,7 @@ package org.moengage.news.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -12,13 +13,11 @@ import android.widget.Toast;
  */
 public class AppUtils {
 
-    public static boolean isNetworkAvailable() {
-        try {
-            final String command = "ping -c 1 google.com";
-            return Runtime.getRuntime().exec(command).waitFor() == 0;
-        } catch (Exception e) {
-            return false;
-        }
+
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 
 

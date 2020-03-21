@@ -24,6 +24,10 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:recyclerViewAdapter="@{vm.articleAdapter}" />
 
+        <include
+            layout="@layout/layout_loader"
+            app:vm="@{vm.loaderHelper.loaderViewModel}" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
