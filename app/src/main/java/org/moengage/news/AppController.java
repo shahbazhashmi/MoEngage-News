@@ -1,5 +1,6 @@
 package org.moengage.news;
 
+import android.app.AlarmManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,9 +14,10 @@ import org.moengage.news.data.db.ArticleDbHelper;
 public class AppController extends Application {
 
     private static AppController mInstance;
-    private static Resources mResources;
-    private static ArticleDbHelper mArticleDbHelper;
-    private static SharedPreferences mSharedPreferences;
+    private Resources mResources;
+    private ArticleDbHelper mArticleDbHelper;
+    private SharedPreferences mSharedPreferences;
+    private AlarmManager mAlarmManager;
 
     @Override
     public void onCreate() {
@@ -24,21 +26,26 @@ public class AppController extends Application {
         mResources = getResources();
         mArticleDbHelper = new ArticleDbHelper(this);
         mSharedPreferences = getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
+        mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
     }
 
     public static synchronized AppController getInstance() {
         return mInstance;
     }
 
-    public static Resources getResourses() {
+    public Resources getResourses() {
         return mResources;
     }
 
-    public static ArticleDbHelper getArticleDbHelper() {
+    public ArticleDbHelper getArticleDbHelper() {
         return mArticleDbHelper;
     }
 
-    public static SharedPreferences getSharedPreferences() {
+    public SharedPreferences getSharedPreferences() {
         return mSharedPreferences;
+    }
+
+    public AlarmManager getAlarmManager() {
+        return mAlarmManager;
     }
 }

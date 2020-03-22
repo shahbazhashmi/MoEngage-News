@@ -68,10 +68,10 @@ public class ArticleRepository {
         if (!AppUtils.isNetworkAvailable(AppController.getInstance())) {
             if (isLocalDataAvailable) {
                 if (fetchListDataListener != null)
-                    fetchListDataListener.onErrorPrompt(AppController.getResourses().getString(R.string.error_internet));
+                    fetchListDataListener.onErrorPrompt(AppController.getInstance().getResourses().getString(R.string.error_internet));
             } else {
                 if (fetchListDataListener != null)
-                    fetchListDataListener.onError(AppController.getResourses().getString(R.string.error_internet), true);
+                    fetchListDataListener.onError(AppController.getInstance().getResourses().getString(R.string.error_internet), true);
             }
             return;
         }
@@ -96,7 +96,7 @@ public class ArticleRepository {
 
                 JSONArray articles = response.getJSONArray("articles");
 
-                db = AppController.getArticleDbHelper().getWritableDatabase();
+                db = AppController.getInstance().getArticleDbHelper().getWritableDatabase();
 
                 db.delete(TABLE_NAME, null, null);
 
@@ -130,32 +130,34 @@ public class ArticleRepository {
                     values.put(ArticleContract.ArticleEntry.COLUMN_NAME_SOURCE_ID, sourceId);
                     values.put(ArticleContract.ArticleEntry.COLUMN_NAME_SOURCE_NAME, sourceName);
 
-                    long newRowId = db.insert(TABLE_NAME, null, values);
+                    try {
+                        long newRowId = db.insert(TABLE_NAME, null, values);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
+                Log.d(TAG, "fetchAndGetListData -> Inserted record " + articles.length());
+
                 SharedPreferenceManager.getInstance().setLastUpdatedTimestamp();
+
                 if (returnData) {
                     getArticlesFromDb();
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
-                if (fetchListDataListener != null)
+                if (returnData && fetchListDataListener != null)
                     DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(() -> {
-                        fetchListDataListener.onError(AppController.getResourses().getString(R.string.error_something_went_wrong), true);
+                        fetchListDataListener.onError(AppController.getInstance().getResourses().getString(R.string.error_something_went_wrong), true);
                     });
             }
-            if (fetchListDataListener != null)
-                DefaultExecutorSupplier.getInstance().forMainThreadTasks().execute(() -> {
-                    fetchListDataListener.onSuccess(mArticleList);
-                });
-
         });
     }
 
 
     private boolean isLocalDataAvailable() {
-        db = AppController.getArticleDbHelper().getReadableDatabase();
+        db = AppController.getInstance().getArticleDbHelper().getReadableDatabase();
         long count = DatabaseUtils.queryNumEntries(db, TABLE_NAME);
         db.close();
         return count > 0;
@@ -163,7 +165,7 @@ public class ArticleRepository {
 
     public ArrayList<String> getAllPublishers() {
         ArrayList<String> authorList = new ArrayList<>();
-        db = AppController.getArticleDbHelper().getReadableDatabase();
+        db = AppController.getInstance().getArticleDbHelper().getReadableDatabase();
         Cursor c = db.query(true, ArticleContract.ArticleEntry.TABLE_NAME, new String[]{ArticleContract.ArticleEntry.COLUMN_NAME_AUTHOR}, null, null, ArticleContract.ArticleEntry.COLUMN_NAME_AUTHOR, null, null, null);
         while (c.moveToNext()) {
             String author = c.getString(c.getColumnIndexOrThrow(ArticleContract.ArticleEntry.COLUMN_NAME_AUTHOR));
@@ -177,7 +179,7 @@ public class ArticleRepository {
 
         DefaultExecutorSupplier.getInstance().forBackgroundTasks().execute(() -> {
 
-            db = AppController.getArticleDbHelper().getReadableDatabase();
+            db = AppController.getInstance().getArticleDbHelper().getReadableDatabase();
 
             String sortOrder = null;
             String selection = null;

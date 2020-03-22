@@ -24,7 +24,7 @@ public class SharedPreferenceManager {
     SharedPreferences.Editor editor;
 
     public void setLastUpdatedTimestamp() {
-        editor = AppController.getSharedPreferences().edit();
+        editor = AppController.getInstance().getSharedPreferences().edit();
         editor.putLong(KEY_CACHE_TIMOUT, System.currentTimeMillis());
         editor.commit();
     }
@@ -33,7 +33,7 @@ public class SharedPreferenceManager {
      * logic to check if cache data expired
      */
     public boolean isLocalDataExpired() {
-        if (System.currentTimeMillis() - AppController.getSharedPreferences().getLong(
+        if (System.currentTimeMillis() - AppController.getInstance().getSharedPreferences().getLong(
                 KEY_CACHE_TIMOUT,
                 0
         ) > BuildConfig.CACHE_TIMEOUT

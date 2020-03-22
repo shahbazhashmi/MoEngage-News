@@ -5,6 +5,8 @@ package org.moengage.news;
  */
 public class Config {
 
+    public static final int SYNC_ALARM_REQUEST_CODE = 101;
+
     public static final String NEWS_FEED_URL = BuildConfig.BASE_URL+"news-api-feed/staticResponse.json";
 
 }
