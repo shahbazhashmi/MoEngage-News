@@ -8,6 +8,7 @@
 
     <dimen name="news_image_dimension">46dp</dimen>
     <dimen name="sort_icon_dimension">24dp</dimen>
+    <dimen name="filter_icon_dimension">20dp</dimen>
 
     <dimen name="font_20">20sp</dimen>
     <dimen name="font_18">18sp</dimen>

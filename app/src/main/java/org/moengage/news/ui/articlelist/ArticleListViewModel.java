@@ -29,6 +29,7 @@ public class ArticleListViewModel extends AndroidViewModel implements FetchListD
     public LoaderHelper loaderHelper;
 
     public ObservableField<Boolean> ascendingSort = new ObservableField<>();
+    public ObservableField<String> selectedPublisher = new ObservableField<>();
 
     FilterModel filterModel;
 
@@ -78,8 +79,13 @@ public class ArticleListViewModel extends AndroidViewModel implements FetchListD
         articleRepository.getArticles(filterModel, false);
     }
 
+    public void onFilterClick() {
+
+    }
+
     void populateSortAndFilter() {
         ascendingSort.set(filterModel.isSortByDateAsc());
+        selectedPublisher.set(filterModel.getFilterByAuthor());
         articleRepository.getAllPublishers();
     }
 }

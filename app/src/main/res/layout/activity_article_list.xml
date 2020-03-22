@@ -5,6 +5,7 @@
 
     <data>
 
+        <import type="android.text.TextUtils" />
         <variable
             name="vm"
             type="org.moengage.news.ui.articlelist.ArticleListViewModel" />
@@ -34,7 +35,46 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/textview_publisher"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> vm.onFilterClick()}"
+                android:text="@{!TextUtils.isEmpty(vm.selectedPublisher) ? vm.selectedPublisher : @string/txt_all_publishers}"
+                android:textColor="@color/secondaryPrimaryText"
+                android:textSize="@dimen/font_14"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/imageview_sort"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/imageview_sort" />
+
+            <ImageView
+                android:id="@+id/imageview_expand_filter"
+                android:layout_width="@dimen/filter_icon_dimension"
+                android:layout_height="@dimen/filter_icon_dimension"
+                android:layout_marginLeft="@dimen/spacing_6"
+                android:onClick="@{() -> vm.onFilterClick()}"
+                android:src="@drawable/ic_expand"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/textview_publisher"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textview_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/spacing_6"
+                android:onClick="@{() -> vm.toggleSort()}"
+                android:text="@string/txt_datetime"
+                android:textColor="@color/secondaryPrimaryText"
+                android:textSize="@dimen/font_14"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/imageview_sort"
+                app:layout_constraintRight_toLeftOf="@+id/imageview_sort"
+                app:layout_constraintTop_toTopOf="@+id/imageview_sort" />
+
         <ImageView
+            android:id="@+id/imageview_sort"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
