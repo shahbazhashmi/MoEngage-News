@@ -10,9 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.moengage.news.R;
 import org.moengage.news.models.Article;
-import org.moengage.news.utils.DateTimeUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,8 +20,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleH
 
     List<Article> articleArrayList;
 
-    ArticleAdapter() {
-        articleArrayList = new ArrayList<>();
+    ArticleAdapter(List<Article> articleArrayList) {
+        this.articleArrayList = articleArrayList;
     }
 
     class ArticleHolder extends RecyclerView.ViewHolder {
@@ -43,15 +41,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleH
             dateTimeTv.setText(article.getPublishedAt());
             titleTv.setText(article.getTitle());
             descTv.setText(article.getDescription());
-        }
-    }
-
-    void setData(List<Article> articleArrayList) {
-        if (articleArrayList != null && !articleArrayList.isEmpty()) {
-            if (!this.articleArrayList.equals(articleArrayList)) {
-                this.articleArrayList = articleArrayList;
-                notifyDataSetChanged();
-            }
         }
     }
 

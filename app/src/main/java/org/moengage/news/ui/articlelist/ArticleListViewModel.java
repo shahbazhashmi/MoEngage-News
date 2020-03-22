@@ -28,7 +28,7 @@ public class ArticleListViewModel extends AndroidViewModel implements FetchListD
 
     ShowFilterBottomSheetListener showFilterBottomSheetListener;
 
-    public ArticleAdapter articleAdapter;
+    public ObservableField<ArticleAdapter> articleAdapter = new ObservableField<>();
 
     public LoaderHelper loaderHelper;
 
@@ -42,7 +42,6 @@ public class ArticleListViewModel extends AndroidViewModel implements FetchListD
         filterModel = new FilterModel();
         this.showFilterBottomSheetListener = showFilterBottomSheetListener;
         loaderHelper = new LoaderHelper(() -> articleRepository.getArticles(filterModel, false));
-        articleAdapter = new ArticleAdapter();
         articleRepository = new ArticleRepository();
         articleRepository.setFetchListDataListener(this);
         articleRepository.getArticles(filterModel, false);
@@ -57,7 +56,7 @@ public class ArticleListViewModel extends AndroidViewModel implements FetchListD
     @Override
     public void onSuccess(List<Article> articleList) {
         Log.d(TAG, "FetchListDataListener : onSuccess");
-        articleAdapter.setData(articleList);
+        articleAdapter.set(new ArticleAdapter(articleList));
         populateSortAndFilter();
         loaderHelper.dismiss();
     }
