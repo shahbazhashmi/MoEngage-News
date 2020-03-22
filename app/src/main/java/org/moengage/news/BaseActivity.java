@@ -9,7 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Created by Shahbaz Hashmi on 2020-03-20.
+ * holds are common / required activity methods
  */
+
 public abstract class BaseActivity extends AppCompatActivity implements NetworkStateReceiver.NetworkStateReceiverListener {
 
     private static final String TAG = "BaseActivity";

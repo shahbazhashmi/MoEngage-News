@@ -19,6 +19,9 @@ public class AppController extends Application {
     private SharedPreferences mSharedPreferences;
     private AlarmManager mAlarmManager;
 
+    /**
+     * init all required objects in onCreate
+     */
     @Override
     public void onCreate() {
         super.onCreate();
@@ -29,6 +32,11 @@ public class AppController extends Application {
         mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
     }
 
+    /**
+     * singleton of AppController
+     *
+     * @return AppController instance
+     */
     public static synchronized AppController getInstance() {
         return mInstance;
     }

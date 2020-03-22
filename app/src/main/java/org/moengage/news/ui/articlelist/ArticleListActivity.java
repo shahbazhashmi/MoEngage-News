@@ -47,6 +47,9 @@ public class ArticleListActivity extends BaseActivity {
         setSyncRepeatingAlarm();
     }
 
+    /**
+     * sets repeating alarm for syncing
+     */
     public void setSyncRepeatingAlarm() {
         Intent intent = new Intent(this, SyncDataBroadcastReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, Config.SYNC_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_NO_CREATE);

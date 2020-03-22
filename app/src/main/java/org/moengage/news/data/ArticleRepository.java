@@ -48,6 +48,13 @@ public class ArticleRepository {
         this.fetchListDataListener = fetchListDataListener;
     }
 
+    /**
+     * only this method should be used from UI
+     * handles all success and fallback
+     *
+     * @param filterModel
+     * @param mustFetchNewData
+     */
     public void getArticles(FilterModel filterModel, boolean mustFetchNewData) {
 
         this.filterModel = filterModel;
@@ -81,6 +88,10 @@ public class ArticleRepository {
     }
 
 
+    /**
+     * fetch data from server and saves into local db
+     * @param returnData flag to return data
+     */
     public void fetchAndSaveArticles(boolean returnData) {
 
         DefaultExecutorSupplier.getInstance().forBackgroundTasks().execute(() -> {
@@ -163,6 +174,10 @@ public class ArticleRepository {
         return count > 0;
     }
 
+    /**
+     * get all publishers/authors name
+     * @return list of publishers
+     */
     public ArrayList<String> getAllPublishers() {
         ArrayList<String> authorList = new ArrayList<>();
         db = AppController.getInstance().getArticleDbHelper().getReadableDatabase();
@@ -175,6 +190,9 @@ public class ArticleRepository {
         return authorList;
     }
 
+    /**
+     * get data from local db
+     */
     private void getArticlesFromDb() {
 
         DefaultExecutorSupplier.getInstance().forBackgroundTasks().execute(() -> {

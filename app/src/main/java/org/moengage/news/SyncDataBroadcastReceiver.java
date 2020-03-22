@@ -9,7 +9,9 @@ import org.moengage.news.data.ArticleRepository;
 
 /**
  * Created by Shahbaz Hashmi on 2020-03-22.
+ * BroadcastReceiver to be triggered by Alarm Manager
  */
+
 public class SyncDataBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "SyncDataReceiver";
 

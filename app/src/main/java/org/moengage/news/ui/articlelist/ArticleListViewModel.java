@@ -87,6 +87,9 @@ public class ArticleListViewModel extends AndroidViewModel implements FetchListD
         showFilterBottomSheetListener.showFilterBottomSheet(articleRepository.getAllPublishers());
     }
 
+    /**
+     * sets filter and sort data with filter model
+     */
     void populateSortAndFilter() {
         ascendingSort.set(filterModel.isSortByDateAsc());
         selectedPublisher.set(filterModel.getFilterByAuthor());

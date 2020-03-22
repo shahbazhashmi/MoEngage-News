@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * Created by Shahbaz Hashmi on 2020-03-20.
+ * Listens network state
  */
 public class NetworkStateReceiver extends BroadcastReceiver {
 
