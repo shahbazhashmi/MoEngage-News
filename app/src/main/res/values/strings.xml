@@ -5,4 +5,5 @@
     <string name="txt_retry">RETRY</string>
     <string name="txt_datetime">Date Time</string>
     <string name="txt_all_publishers">All Publishers</string>
+    <string name="filter_by_publisher">Filter by Publisher</string>
 </resources>

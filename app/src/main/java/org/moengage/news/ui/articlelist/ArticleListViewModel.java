@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 
 import org.moengage.news.data.ArticleRepository;
 import org.moengage.news.interfaces.FetchListDataListener;
+import org.moengage.news.interfaces.ShowFilterBottomSheetListener;
 import org.moengage.news.models.Article;
 import org.moengage.news.models.FilterModel;
 import org.moengage.news.ui.loader.LoaderHelper;
@@ -24,6 +25,8 @@ public class ArticleListViewModel extends AndroidViewModel implements FetchListD
 
     ArticleRepository articleRepository;
 
+    ShowFilterBottomSheetListener showFilterBottomSheetListener;
+
     public ArticleAdapter articleAdapter;
 
     public LoaderHelper loaderHelper;
@@ -33,9 +36,10 @@ public class ArticleListViewModel extends AndroidViewModel implements FetchListD
 
     FilterModel filterModel;
 
-    public ArticleListViewModel(@NonNull Application application) {
+    public ArticleListViewModel(@NonNull Application application, ShowFilterBottomSheetListener showFilterBottomSheetListener) {
         super(application);
         filterModel = new FilterModel();
+        this.showFilterBottomSheetListener = showFilterBottomSheetListener;
         loaderHelper = new LoaderHelper(() -> articleRepository.getArticles(filterModel, false));
         articleAdapter = new ArticleAdapter();
         articleRepository = new ArticleRepository();
@@ -80,12 +84,11 @@ public class ArticleListViewModel extends AndroidViewModel implements FetchListD
     }
 
     public void onFilterClick() {
-
+        showFilterBottomSheetListener.showFilterBottomSheet(articleRepository.getAllPublishers());
     }
 
     void populateSortAndFilter() {
         ascendingSort.set(filterModel.isSortByDateAsc());
         selectedPublisher.set(filterModel.getFilterByAuthor());
-        articleRepository.getAllPublishers();
     }
 }

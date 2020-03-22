@@ -22,7 +22,12 @@ public class ArticleListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_article_list);
-        viewModel = new ArticleListViewModel(getApplication());
+        viewModel = new ArticleListViewModel(getApplication(), publishers -> {
+            ArticleFilterBottomSheetFragment filterBottomDialogFragment =
+                    ArticleFilterBottomSheetFragment.newInstance();
+            filterBottomDialogFragment.show(getSupportFragmentManager(),
+                    ArticleFilterBottomSheetFragment.TAG);
+        });
         binding.setVm(viewModel);
     }
 }
