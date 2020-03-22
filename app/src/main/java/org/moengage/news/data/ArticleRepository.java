@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -179,6 +180,8 @@ public class ArticleRepository {
             db = AppController.getArticleDbHelper().getReadableDatabase();
 
             String sortOrder = null;
+            String selection = null;
+            String[] selectionArgs = null;
 
             if (filterModel != null) {
                 if (filterModel.isSortByDateAsc()) {
@@ -186,13 +189,17 @@ public class ArticleRepository {
                 } else {
                     sortOrder = ArticleContract.ArticleEntry.COLUMN_NAME_PUBLISHED_AT + " DESC";
                 }
+                if (!TextUtils.isEmpty(filterModel.getFilterByAuthor())) {
+                    selection = ArticleContract.ArticleEntry.COLUMN_NAME_AUTHOR + "= ?";
+                    selectionArgs = new String[]{filterModel.getFilterByAuthor()};
+                }
             }
 
             Cursor c = db.query(
                     ArticleContract.ArticleEntry.TABLE_NAME,   // The table to query
                     projection,             // The array of columns to return (pass null to get all)
-                    null,              // The columns for the WHERE clause
-                    null,          // The values for the WHERE clause
+                    selection,              // The columns for the WHERE clause
+                    selectionArgs,          // The values for the WHERE clause
                     null,                   // don't group the rows
                     null,                   // don't filter by row groups
                     sortOrder               // The sort order

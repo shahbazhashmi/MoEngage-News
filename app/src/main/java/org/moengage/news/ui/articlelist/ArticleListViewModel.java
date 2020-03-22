@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 
 import org.moengage.news.data.ArticleRepository;
 import org.moengage.news.interfaces.FetchListDataListener;
+import org.moengage.news.interfaces.FilterItemClickListener;
 import org.moengage.news.interfaces.ShowFilterBottomSheetListener;
 import org.moengage.news.models.Article;
 import org.moengage.news.models.FilterModel;
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * Created by Shahbaz Hashmi on 2020-03-21.
  */
-public class ArticleListViewModel extends AndroidViewModel implements FetchListDataListener {
+public class ArticleListViewModel extends AndroidViewModel implements FetchListDataListener, FilterItemClickListener {
 
     private static final String TAG = "ArticleListViewModel";
 
@@ -90,5 +91,13 @@ public class ArticleListViewModel extends AndroidViewModel implements FetchListD
     void populateSortAndFilter() {
         ascendingSort.set(filterModel.isSortByDateAsc());
         selectedPublisher.set(filterModel.getFilterByAuthor());
+    }
+
+    @Override
+    public void onFilterClick(int position, String name) {
+        // 0th index holds all publisher
+        selectedPublisher.set(position == 0 ? "" : name);
+        filterModel.setFilterByAuthor(selectedPublisher.get());
+        articleRepository.getArticles(filterModel, false);
     }
 }

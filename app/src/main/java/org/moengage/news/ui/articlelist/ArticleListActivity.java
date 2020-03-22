@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil;
 import org.moengage.news.BaseActivity;
 import org.moengage.news.R;
 import org.moengage.news.databinding.ActivityArticleListBinding;
+import org.moengage.news.ui.articlelist.filter.ArticleFilterBottomSheetFragment;
 
 public class ArticleListActivity extends BaseActivity {
 
@@ -24,7 +25,7 @@ public class ArticleListActivity extends BaseActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_article_list);
         viewModel = new ArticleListViewModel(getApplication(), publishers -> {
             ArticleFilterBottomSheetFragment filterBottomDialogFragment =
-                    ArticleFilterBottomSheetFragment.newInstance();
+                    ArticleFilterBottomSheetFragment.newInstance(publishers, viewModel);
             filterBottomDialogFragment.show(getSupportFragmentManager(),
                     ArticleFilterBottomSheetFragment.TAG);
         });
