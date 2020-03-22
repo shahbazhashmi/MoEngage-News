@@ -17,6 +17,7 @@ import org.moengage.news.models.Article;
 import org.moengage.news.models.FilterModel;
 import org.moengage.news.models.Source;
 import org.moengage.news.utils.AppUtils;
+import org.moengage.news.utils.DateTimeUtils;
 import org.moengage.news.utils.HttpUtility;
 import org.moengage.news.utils.SharedPreferenceManager;
 import org.moengage.news.utils.executors.DefaultExecutorSupplier;
@@ -123,7 +124,7 @@ public class ArticleRepository {
                     values.put(ArticleContract.ArticleEntry.COLUMN_NAME_DESCRIPTION, description);
                     values.put(ArticleContract.ArticleEntry.COLUMN_NAME_URL, url);
                     values.put(ArticleContract.ArticleEntry.COLUMN_NAME_URL_TO_IMAGE, urlToImage);
-                    values.put(ArticleContract.ArticleEntry.COLUMN_NAME_PUBLISHED_AT, publishedAt);
+                    values.put(ArticleContract.ArticleEntry.COLUMN_NAME_PUBLISHED_AT, DateTimeUtils.getTimestamp(publishedAt));
                     values.put(ArticleContract.ArticleEntry.COLUMN_NAME_CONTENT, content);
                     values.put(ArticleContract.ArticleEntry.COLUMN_NAME_SOURCE_ID, sourceId);
                     values.put(ArticleContract.ArticleEntry.COLUMN_NAME_SOURCE_NAME, sourceName);
@@ -181,9 +182,9 @@ public class ArticleRepository {
 
             if (filterModel != null) {
                 if (filterModel.isSortByDateAsc()) {
-                    sortOrder = ArticleContract.ArticleEntry.COLUMN_NAME_AUTHOR + " ASC";
+                    sortOrder = ArticleContract.ArticleEntry.COLUMN_NAME_PUBLISHED_AT + " ASC";
                 } else {
-                    sortOrder = ArticleContract.ArticleEntry.COLUMN_NAME_AUTHOR + " DESC";
+                    sortOrder = ArticleContract.ArticleEntry.COLUMN_NAME_PUBLISHED_AT + " DESC";
                 }
             }
 
@@ -205,7 +206,7 @@ public class ArticleRepository {
                 String description = c.getString(c.getColumnIndexOrThrow(ArticleContract.ArticleEntry.COLUMN_NAME_DESCRIPTION));
                 String url = c.getString(c.getColumnIndexOrThrow(ArticleContract.ArticleEntry.COLUMN_NAME_URL));
                 String urlToImage = c.getString(c.getColumnIndexOrThrow(ArticleContract.ArticleEntry.COLUMN_NAME_URL_TO_IMAGE));
-                String publishedAt = c.getString(c.getColumnIndexOrThrow(ArticleContract.ArticleEntry.COLUMN_NAME_PUBLISHED_AT));
+                String publishedAt = DateTimeUtils.getFormattedDateTime(c.getLong(c.getColumnIndexOrThrow(ArticleContract.ArticleEntry.COLUMN_NAME_PUBLISHED_AT)));
                 String content = c.getString(c.getColumnIndexOrThrow(ArticleContract.ArticleEntry.COLUMN_NAME_CONTENT));
                 String sourceId = c.getString(c.getColumnIndexOrThrow(ArticleContract.ArticleEntry.COLUMN_NAME_SOURCE_ID));
                 String sourceName = c.getString(c.getColumnIndexOrThrow(ArticleContract.ArticleEntry.COLUMN_NAME_SOURCE_NAME));

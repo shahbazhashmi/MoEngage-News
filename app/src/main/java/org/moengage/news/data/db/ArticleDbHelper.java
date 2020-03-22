@@ -19,7 +19,7 @@ public class ArticleDbHelper extends SQLiteOpenHelper {
                     ArticleContract.ArticleEntry.COLUMN_NAME_TITLE + " TEXT," +
                     ArticleContract.ArticleEntry.COLUMN_NAME_DESCRIPTION + " TEXT," +
                     ArticleContract.ArticleEntry.COLUMN_NAME_URL_TO_IMAGE + " TEXT," +
-                    ArticleContract.ArticleEntry.COLUMN_NAME_PUBLISHED_AT + " TEXT," +
+                    ArticleContract.ArticleEntry.COLUMN_NAME_PUBLISHED_AT + " INTEGER," +
                     ArticleContract.ArticleEntry.COLUMN_NAME_SOURCE_ID + " TEXT," +
                     ArticleContract.ArticleEntry.COLUMN_NAME_SOURCE_NAME + " TEXT," +
                     ArticleContract.ArticleEntry.COLUMN_NAME_CONTENT + " TEXT)";

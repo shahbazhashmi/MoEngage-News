@@ -40,7 +40,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleH
         public void bind(int position) {
             Article article = articleArrayList.get(position);
             userNameTv.setText(article.getAuthor());
-            dateTimeTv.setText(DateTimeUtils.getFormattedDateTime(article.getPublishedAt()));
+            dateTimeTv.setText(article.getPublishedAt());
             titleTv.setText(article.getTitle());
             descTv.setText(article.getDescription());
         }
