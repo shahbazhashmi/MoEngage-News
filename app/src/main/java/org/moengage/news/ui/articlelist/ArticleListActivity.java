@@ -52,7 +52,7 @@ public class ArticleListActivity extends BaseActivity {
      */
     public void setSyncRepeatingAlarm() {
         Intent intent = new Intent(this, SyncDataBroadcastReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, Config.SYNC_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_NO_CREATE);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, Config.SYNC_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AppController.getInstance().getAlarmManager().setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime() + BuildConfig.CACHE_TIMEOUT,
                 BuildConfig.CACHE_TIMEOUT,
